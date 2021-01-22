@@ -220,7 +220,6 @@ func (t *classmap) toTMX(filename string) {
 		}
 		bf.WriteString("\n")
 	}
-
 	bf.WriteString(tailer)
 	bf.Flush()
 }
