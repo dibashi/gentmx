@@ -151,10 +151,12 @@ func GenClassToIDMap(jsonfile string) {
 
 	classToIDMap[you] = cm.You
 	classToIDMap[wu] = cm.Wu
+
 	classToIDMap[up] = cm.Up
 	classToIDMap[down] = cm.Down
 	classToIDMap[left] = cm.Left
 	classToIDMap[right] = cm.Right
+
 	classToIDMap[upleft] = cm.Upleft
 	classToIDMap[upright] = cm.Upright
 	classToIDMap[downleft] = cm.Downleft
