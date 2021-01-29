@@ -101,6 +101,7 @@ var classToColorMap = map[classInfo]color.RGBA{
 
 //将classM 映射为ids 需要一个映射表来做映射
 var classToIDMap = map[classInfo][]byte{}
+var youWeightsTrue []float64
 
 var tileWidth int
 var tileHeight int
@@ -108,6 +109,8 @@ var tileHeight int
 type gentmxjsoninfo struct {
 	TileWidth, TileHeight int
 	You                   []byte
+	YouWeights            []byte
+	YouWeightsTrue        []float64
 	Wu                    []byte
 	//以下是边缘 名字代表他什么方位没有东西
 	Up              []byte
@@ -166,9 +169,33 @@ func GenClassToIDMap(jsonfile string) {
 	classToIDMap[cornerupright] = cm.CornerUpright
 	classToIDMap[cornerdownleft] = cm.CornerDownleft
 	classToIDMap[cornerdownright] = cm.CornerDownright
+
+	totalWeight := 0
+	for _, w := range cm.YouWeights {
+		totalWeight += int(w)
+	}
+	tmpWeight := 0
+	for _, v := range cm.YouWeights {
+		tmpWeight += int(v)
+		cm.YouWeightsTrue = append(cm.YouWeightsTrue, float64(tmpWeight)/float64(totalWeight))
+		fmt.Println(tmpWeight, totalWeight, float64(tmpWeight)/float64(totalWeight))
+	}
+	youWeightsTrue = cm.YouWeightsTrue
+	fmt.Println(cm.YouWeightsTrue, len(cm.YouWeightsTrue))
+
 }
 
 func (ci classInfo) classInfoToID() byte {
+	if ci == you {
+		r := rand.Float64()
+		for i := 0; i < len(youWeightsTrue); i++ {
+			if r < youWeightsTrue[i] {
+				return classToIDMap[ci][i]
+			}
+		}
+
+		panic("不可能")
+	}
 	randIndex := rand.Intn(len(classToIDMap[ci]))
 	return classToIDMap[ci][randIndex]
 }
